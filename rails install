@@ -105,6 +105,10 @@ $ psql --command "CREATE ROLE `cat /tmp/caller` LOGIN createdb;"
 $ exit
 $ rm -f /tmp/caller 
 
+--- Résolution soucis port pg ---
+
+$ sudo ln -s /tmp/.s.PGSQL.5432 /var/run/postgresql/.s.PGSQL.5432
+
 --- test installation ---
 
 $ curl -Ls https://raw.githubusercontent.com/lewagon/setup/master/check.rb > _.rb && ruby _.rb || rm _.rb
