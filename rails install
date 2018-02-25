@@ -1,0 +1,114 @@
+--- Install Sublime text ---
+
+$ sudo rpm -v --import https://download.sublimetext.com/sublimehq-rpm-pub.gpg
+$ sudo dnf config-manager --add-repo https://download.sublimetext.com/rpm/stable/x86_64/sublime-text.repo
+$ sudo dnf install sublime-text
+
+--- Install ZSH ---
+
+$ sudo dnf install zsh
+$ wget --no-check-certificate http://install.ohmyz.sh -O - | sh
+
+--- Configuration GIT ---
+
+
+GitHub
+We need to generate SSH keys which are going to be used by GitHub and Heroku to authenticate you. Think of it as a way to log in, but different from the well known username/password couple. If you already generated keys that you already use with other services, you can skip this step.
+
+Open a terminal and type this, replacing the email with yours (the same one you used to create your GitHub account). It will prompt for information. Just press enter until it asks for a passphrase.
+
+$ mkdir -p ~/.ssh && ssh-keygen -t ed25519 -o -a 100 -f ~/.ssh/id_ed25519 -C "TYPE_YOUR_EMAIL@HERE.com"
+
+NB: when asked for a passphrase, put something you want (and that you'll remember), it's a password to protect your private key stored on your hard drive. You'll type, nothing will show up on the screen, that's normal. Just type the passphrase, and when you're done, press Enter.
+
+Then you need to give your public key to GitHub. Run:
+
+$ cat ~/.ssh/id_ed25519.pub
+
+It will prompt on the screen the content of the id_ed25519.pub file. Copy that text, then go to github.com/settings/ssh. Click on Add SSH key, fill in the Title with your computer name, and paste the Key. Finish by clicking on the Add key green button.
+
+To check that this step is completed, in the terminal run this. You will be prompted a warning, type yes then Enter.
+
+$ ssh -T git@github.com
+
+If you see something like this, you're done!
+
+# Hi --------! You've successfully authenticated, but GitHub does not provide shell access
+If it does not work, try running this before trying again the ssh -T command:
+
+$ ssh-add ~/.ssh/id_ed25519
+Don't be in a rush, take time to read this article to get a better understanding of what those keys are used for.
+
+Dotfiles (Standard configuration)
+Hackers love to refine and polish their shell and tools. We'll start with a great default configuration provided by Le Wagon, stored on GitHub. As your configuration is personal, you need your own repository storing it, so you first need to fork it to your GitHub account.
+
+➡️ Click here to fork the lewagon/dotfiles repository to your account. Forking means that it will create a new repo in your GitHub account, identical to the original one. You'll have a new repository on your GitHub account, your_github_username/dotfiles. We need to fork because each of you will need to put specific information (e.g. your name) in those files.
+
+Open your terminal. Don't blindly copy paste this line, replace replace_this_with_your_github_username with your own github usernickname.
+
+$ export GITHUB_USERNAME=replace_this_with_your_github_username
+
+# Example:
+#   export GITHUB_USERNAME=ssaunier
+Now copy/paste this very long line in your terminal. Do not change this one.
+
+$ mkdir -p ~/code/$GITHUB_USERNAME && cd $_ && git clone git@github.com:$GITHUB_USERNAME/dotfiles.git
+Run the dotfiles installer.
+
+$ cd ~/code/$GITHUB_USERNAME/dotfiles
+$ zsh install.sh
+Then run the git installer:
+
+$ cd ~/code/$GITHUB_USERNAME/dotfiles
+$ zsh git_setup.sh
+☝️ This will prompt you for your name (Firstname Lastname) and your email.
+
+Be careful, you need to put the same email as the one you sign up with on GitHub.
+
+Please now quit all your opened terminal windows.
+
+Sublime Text auto-configuration
+Open a new terminal and type this:
+
+$ stt
+It will open Sublime Text in the context of your current folder. That's how we'll use it.
+
+Close Sublime text and open it again:
+
+$ stt
+Wait 1 minute for additional packages to be automatically installed (New tabs with text will automatically open, containing documentation for each new package installed). TO follow package installation, you can go to View > Show console.
+
+To check if plugins are installed, open the Command Palette (⌘ + ⇧ + P on OSX, Ctrl + ⇧ + P on Linux), type in Packlist and then Enter, you should see a couple of packages installed (like Emmet).
+
+If you don't, please install all of them manually. The list is referenced here.
+
+When it's done, you can close Sublime Text.
+
+--- Installation RBENV ---
+
+$ sudo dnf install git-core zlib zlib-devel gcc-c++ patch readline readline-devel libyaml-devel libffi-devel openssl-devel make bzip2 autoconf automake libtool bison curl sqlite-devel
+
+$ git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+$ git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
+$ rbenv install 2.4.3
+$ rbenv install 2.4.3
+
+--- Installation postgresql ---
+
+$ gem install rake bundler rspec rubocop pry pry-byebug hub colored octokit
+
+$ sudo dnf install postgresql-contrib postgresql-server  
+$ sudo systemctl start postgresql
+$ echo `whoami` > /tmp/caller
+$ sudo su - postgres
+$ psql --command "CREATE ROLE `cat /tmp/caller` LOGIN createdb;"
+$ exit
+$ rm -f /tmp/caller 
+
+--- test installation ---
+
+$ curl -Ls https://raw.githubusercontent.com/lewagon/setup/master/check.rb > _.rb && ruby _.rb || rm _.rb
+ 
+
+
+
